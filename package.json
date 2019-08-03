@@ -1,0 +1,23 @@
+{
+  "name": "joinposter-api",
+  "version": "0.0.1",
+  "description": "Package for joinposter web-api.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc && node dist/test"
+  },
+  "author": "VPavelko",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/request": "^2.48.2",
+    "@types/request-promise": "^4.1.44",
+    "typescript": "^2.7.2"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
+  }
+}
