@@ -34,7 +34,7 @@ export interface CreateCategoryBody {
     tax_id?: number;
 }
 
-export interface UpdateCatagoryBody {
+export interface UpdateCategoryBody {
     category_id: number;
     category_name: string;
     parent_category: number;

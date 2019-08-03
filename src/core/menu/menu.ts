@@ -1,114 +1,47 @@
 import 'reflect-metadata';
-import * as types from './types-menu';
-import { BaseApiRoute, QueryContext } from '../base';
+import { BaseApiRoute, QContext, ApiMethod, Context } from '../base';
+import * as t from './types-menu';
 
-function ApiMethod(method: 'GET' | 'POST') {
-
-    console.log(`decorated metho`)
-    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {        
-        const defaultMethod = target[propertyKey];
-        const route = target.constructor.route;
-
-        descriptor.value = function(...args: any[]) {
-            const ctx: QueryContext = {
-                apiMethod: `${route}.${propertyKey}`,
-                method,
-            }
-            
-          console.log(`Apimethod`, args);
-          args.push(ctx);
-            return defaultMethod.call(target, ...args);
-        }
-    }
-}
-
-function Context() {
-    console.log(`decorated arg`)
-    return function(target: any, propertyKey: string | symbol, index: number) {
-        const method = target[propertyKey]; 
-
-        target[propertyKey] = function(...args: any[]) {
-            console.log(`args.length `, args.length, `index `, index);
-            
-            // while (args.length - 1  < index) {
-            //     args.push(undefined);
-            //     console.log(`pushed undefined`);
-            // }
-
-            const ctxIndex = args.findIndex((arg) => arg.method);
-            
-            if (ctxIndex !== index) {
-                const ctx = args[ctxIndex];
-                console.log(propertyKey, { ctx }, 'd');
-                args[ctxIndex] = undefined;
-                const pushed = args.push(ctx);
-
-                if (pushed -1 !== index) console.log(`WTF`);
-            } 
-
-            // console.log(`Decorated ctx `, ctx);
-
-            console.log(`Finished `, args);
-            return method.call(target, ...args);
-        }
-    }
-}
-
-export class MenuApiRoute extends BaseApiRoute {
-    static route = 'menu';
-
-    @ApiMethod('GET')
-    public getCategories(@Context() ctx: QueryContext<types.GetCategoryQuery> = {}): Promise<types.Category[]> {
-        // return this.queryRunner<{}, types.Category[]>({ method: "GET", apiMethod: "menu.getCategories" });
-        console.log('getCategories', { ctx });
-        return Promise.resolve([]);
+export class Menu extends BaseApiRoute {
+    
+    @ApiMethod()
+    getCategories(ctx: QContext = {}): Promise<t.Category[]> {
+        return this.queryRunner<{}, t.Category[]>(ctx);
     }
 
-    @ApiMethod('GET')
-    public getCategory(category_id: number, @Context() ctx: QueryContext<types.GetCategoryQuery> = {}): Promise<types.Category> {
-
+    @ApiMethod()
+    getCategory(category_id: number, @Context() ctx: QContext<t.GetCategoryQuery> = {}): Promise<t.Category> {
         ctx.query = { category_id };
-        console.log(arguments)
-
-        // const ctx: QueryContext<types.GetCategoryQuery> = {
-        //     method: "GET",
-        //     query: {
-        //         category_id,
-        //     },
-        //     apiMethod: "menu.getCategory",
-        // };
-
-        console.log('getCategory', { ctx })
-        //return this.queryRunner<types.GetCategoryQuery, types.Category>(ctx);
-        return Promise.resolve({} as types.Category);
+        return this.queryRunner<t.GetCategoryQuery, t.Category>(ctx);
     }
 
-    public createCategory(body: types.CreateCategoryBody) {
-        const ctx: QueryContext<types.CreateCategoryBody> = {
-            apiMethod: 'menu.createCategory',
-            method: 'POST',
-            body,
-        };
-
-        return this.queryRunner<types.CreateCategoryBody, string>(ctx);
+    @ApiMethod()
+    createCategory(body: t.CreateCategoryBody, @Context() ctx: QContext<t.CreateCategoryBody> = {}) {
+        ctx.body = body;
+        return this.queryRunner<t.CreateCategoryBody, string>(ctx);
     }
 
-    public updateCategory(body: types.UpdateCatagoryBody) {}
+    @ApiMethod()
+    updateCategory(body: t.UpdateCategoryBody, @Context() ctx: QContext<t.UpdateCategoryBody> = {}): Promise<string> {
+        ctx.body = body;
 
-    @ApiMethod('GET')
-    public getProducts(category_id?: number, @Context() ctx: any = {}): Promise<types.Product[]> {
-        
-        // const ctx: QueryContext<types.GetProductsQuery> = {
-        //     method: "GET",
-        //     apiMethod: "menu.getProducts",
-        // };
+        console.log(`update`, ctx);
+        return Promise.resolve('');
+        //return this.queryRunner<t.UpdateCategoryBody, string>(ctx);
+    }
 
+    @ApiMethod()
+    getProducts(category_id?: number, @Context() ctx: QContext<never, t.GetProductsQuery> = {}): Promise<t.Product[]> {
         if (category_id) {
             ctx.query = { category_id };
         }
+        
+        return this.queryRunner<t.GetProductsQuery, t.Product[]>(ctx);
+    }
 
-        console.log(`getProducts`, { ctx });
-        return Promise.resolve([]);
-      //  return this.queryRunner<types.GetProductsQuery, types.Product[]>(ctx);
+    @ApiMethod()
+    removeCategory(category_id: number, @Context() ctx: QContext<t.RemoveCategoryBody> = {}) {
+        ctx.body = { category_id };
+        return this.queryRunner<t.RemoveCategoryBody>(ctx);
     }
 }
