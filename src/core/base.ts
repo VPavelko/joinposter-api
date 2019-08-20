@@ -70,8 +70,15 @@ export function ApiMethod() {
                 method: propertyKey.includes('get') ? 'GET' : 'POST',
             }
             
-            console.log(`get arg`, args);
-            args[meta && meta.ctxIndex || 0] = ctx;
+            if (meta) {
+                const { bodyIndex, ctxIndex } = meta;
+                if (bodyIndex !== undefined) {
+                    ctx.body = args[bodyIndex];
+                }
+
+                args[ctxIndex || 0] = ctx;
+            }
+
             return defaultMethod.call(target, ...args);
         }
     }
@@ -89,7 +96,12 @@ export function Context() {
 }
 
 export function CBody() {
-    return function(target: any, propertyKey: string | symbol, bodyIndex: number) {
-        
+    return function(target: any, propertyKey: string | symbol, bodyIndex: number) {   
+        let metadata = Reflect.getMetadata(propertyKey, target);
+        if (!metadata) {
+            Reflect.defineMetadata(propertyKey, { bodyIndex }, target);
+        } else {
+            metadata.bodyIndex = bodyIndex;
+        }
     }
 }

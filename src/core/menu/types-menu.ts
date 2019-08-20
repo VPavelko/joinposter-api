@@ -1,4 +1,4 @@
-type ProductCategoryColor = 'white' | 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'navy-blue' | 'purple'  | 'black' | 'mint-blue' | 'lime-green' | 'pink';
+type PosterColor = 'white' | 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'navy-blue' | 'purple'  | 'black' | 'mint-blue' | 'lime-green' | 'pink';
 type ProductCategoryHiddenFlag = '0' | '1';
 
 export interface GetCategoryQuery {
@@ -12,7 +12,7 @@ export interface Category {
     category_photo: string;
     category_photo_origin: string;
     parent_category: string;
-    category_color: ProductCategoryColor;
+    category_color: PosterColor;
     category_hidden: string;
     sort_order: number;
     fiscal: number;
@@ -29,7 +29,7 @@ export interface Category {
 export interface CreateCategoryBody {
     category_name: string;
     parent_category: number;
-    category_color?:  ProductCategoryColor;
+    category_color?:  PosterColor;
     category_hidden?: ProductCategoryHiddenFlag;
     tax_id?: number;
 }
@@ -38,7 +38,7 @@ export interface UpdateCategoryBody {
     category_id: number;
     category_name: string;
     parent_category: number;
-    category_color?: ProductCategoryColor;
+    category_color?: PosterColor;
     category_hidden?: ProductCategoryHiddenFlag;
     tax_id?: number;
 }
@@ -89,7 +89,34 @@ export interface Modification {
     last_modified_time: string;
 }
 
+export type GetProductType = 'products' | 'batchtickets';
+
 export interface GetProductsQuery {
     category_id?: number;
+    type?: GetProductType;
 }
 
+export interface GetProductQuery {
+    product_id: number;
+}
+
+export interface CreateProductBody {
+    product_name: string;
+    menu_category_id: number;
+    workshop?: number;
+    weight_flag: 0 | 1;
+    color?: PosterColor;
+    different_spots_prices: 0 | 1;
+    modifications?: 0 | 1;
+    modificator_names?: string[];
+    barcode?: string | string[];
+    product_code?: string | string[];
+    cost?: number | number[];
+    price?: number | number[];
+    visible?: number | number[];
+}
+
+export interface CreateProductResponse {
+    product_id: number;
+    modifications_id?: number[];
+}
