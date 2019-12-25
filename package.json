@@ -1,14 +1,22 @@
 {
   "name": "joinposter-api",
   "version": "0.0.1",
-  "description": "Package for joinposter web-api.",
+  "description": "Simple client for joinposter web-api.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/VPavelko/joinposter-api"
+  },
   "scripts": {
     "build": "tsc",
     "test": "tsc && node dist/test"
   },
-  "author": "VPavelko",
+  "author": { 
+    "name": "VPavelko",
+    "email": "shadows0breath@gmail.com",
+    "url": "https://www.linkedin.com/in/vitalii-pavelko-325a4119"
+  },
   "license": "MIT",
   "devDependencies": {
     "@types/request": "^2.48.2",
