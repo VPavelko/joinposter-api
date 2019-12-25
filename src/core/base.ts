@@ -35,9 +35,9 @@ export abstract class BaseApiRoute {
         if (ctx.method === "POST" && ctx.body) {
             query["formData"] = ctx.body;
         }
-    
+        
         const body = await request(query);
-    
+        
         if (body.error) {
             const { error: code, message } = body;
             throw new PosterException(code, message);
@@ -69,7 +69,7 @@ export function ApiMethod() {
                 apiMethod: `${route}.${propertyKey}`,
                 method: propertyKey.includes('get') ? 'GET' : 'POST',
             }
-            
+
             if (meta) {
                 const { bodyIndex, ctxIndex } = meta;
                 if (bodyIndex !== undefined) {
@@ -79,7 +79,7 @@ export function ApiMethod() {
                 args[ctxIndex || 0] = ctx;
             }
 
-            return defaultMethod.call(target, ...args);
+            return defaultMethod.call(this, ...args);
         }
     }
 }

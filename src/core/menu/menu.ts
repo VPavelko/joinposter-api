@@ -4,7 +4,7 @@ import * as t from './types-menu';
 
 export class Menu extends BaseApiRoute {
     @ApiMethod()
-    getCategories(ctx: QContext = {}): Promise<t.Category[]> {
+    getCategories(@Context() ctx: QContext = {}): Promise<t.Category[]> {
         return this.queryRunner<{}, t.Category[]>(ctx);
     }
 
@@ -43,9 +43,6 @@ export class Menu extends BaseApiRoute {
             if (category_id !== undefined || type) {
                 ctx.query = query;
             } 
-
-            // console.log(`getProucts `, ctx);
-            // return Promise.resolve([]);
             return this.queryRunner<t.GetProductsQuery, t.Product[]>(ctx);
     }
 
