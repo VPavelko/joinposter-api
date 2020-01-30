@@ -1,6 +1,6 @@
 {
   "name": "joinposter-api",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Simple client for joinposter web-api.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
