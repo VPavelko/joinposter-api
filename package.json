@@ -1,6 +1,6 @@
 {
   "name": "joinposter-api",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Simple client for joinposter web-api.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -13,7 +13,7 @@
     "test": "tsc && node dist/test",
     "prepublish": "npm run build"
   },
-  "author": { 
+  "author": {
     "name": "VPavelko",
     "email": "shadows0breath@gmail.com",
     "url": "https://www.linkedin.com/in/vitalii-pavelko-325a4119"
