@@ -31,8 +31,8 @@ jobs:
           name: Build package
           command: tsc
       
-      - run: git config user.email "$USER_MAIL"
-      - run: git config user.name "$USER_NAME"        
+      - run: git config --global user.email "$USER_MAIL"
+      - run: git config --global user.name "$USER_NAME"        
 
       - run: npm version patch
 
