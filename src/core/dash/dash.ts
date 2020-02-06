@@ -15,8 +15,8 @@ export class Dash extends BaseApiRoute {
     getTransactionProducts(
         transaction_id: string,
         @Context() ctx: QContext<never, t.GetTransactionProductsQuery> = {},
-    ): Promise<t.TransactionProducts> {
+    ): Promise<t.TransactionProduct[]> {
         ctx.query = { transaction_id };
-        return this.queryRunner<{}, t.TransactionProducts>(ctx);
+        return this.queryRunner<{}, t.TransactionProduct[]>(ctx);
     }
 }

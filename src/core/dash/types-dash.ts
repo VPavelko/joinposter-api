@@ -90,7 +90,7 @@ export interface History {
 export interface GetTransactionProductsQuery {
     transaction_id: string;
 }
-export interface TransactionProducts {
+export interface TransactionProduct {
     product_id: string;
     product_name: string;
     modification_id: string;
