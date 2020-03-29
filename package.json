@@ -1,6 +1,6 @@
 {
   "name": "joinposter-api",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "Simple client for joinposter web-api.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -9,7 +9,7 @@
     "url": "https://github.com/VPavelko/joinposter-api"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -v && tsc",
     "test": "tsc && node dist/test",
     "prepublish": "npm run build"
   },
@@ -22,7 +22,7 @@
   "devDependencies": {
     "@types/request": "^2.48.2",
     "@types/request-promise": "^4.1.44",
-    "typescript": "^2.7.2"
+    "typescript": "^3.7.3"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.13",
