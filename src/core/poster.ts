@@ -1,8 +1,8 @@
-import { Transactions } from './transactions';
-import { Menu } from "./menu/menu";
-import { Access } from "./access";
-import { Settings } from "./settings";
-import { Dash } from "./dash";
+import { Transactions, TransactionsTypes } from './transactions';
+import { Menu, MenuTypes } from './menu';
+import { Access, AccessTypes } from './access';
+import { Settings, SettingsTypes } from './settings';
+import { Dash, DashTypes } from './dash';
 
 export class Poster {
     menu: Menu;
@@ -19,3 +19,11 @@ export class Poster {
         this.transactions = new Transactions(token);
     }
 }
+
+export {
+    MenuTypes as Menu,
+    AccessTypes as Access,
+    SettingsTypes as Settings,
+    DashTypes as Dash,
+    TransactionsTypes as Transaction,
+};
