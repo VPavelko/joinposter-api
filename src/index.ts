@@ -1,1 +1,1 @@
-export { Poster } from './core';
+export * from './core';
