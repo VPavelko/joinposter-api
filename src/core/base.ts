@@ -32,12 +32,12 @@ export abstract class BaseApiRoute {
         protected readonly token: string,
         protected options?: PosterOptions,
     ) {
-        this.log = new Log(this.constructor.name.toUpperCase());
+        this.log = new Log((`POSTER/${this.constructor.name.toUpperCase()}`));
     }
 
     protected async queryRunner<T extends object, R = void>(ctx: QContext<T>): Promise<R> {
         if (this.options?.logLevel === LogLevel.DEBUG) {
-            this.log.debug('Query runner got ctx', { ctx });
+            this.log.debug('Query runner got ctx', { ctx, logLevel: this.options?.logLevel });
         }
         
         const query: Query = {
@@ -64,15 +64,26 @@ export abstract class BaseApiRoute {
     
         const response = body.response;
     
-        if (response === false) throw new PosterException(404, `Not found entity for this query.`);
-    
+        if (response === false) {
+            this.options?.logLevel && this.log.error('Response false', { ctx, response });
+
+            throw new PosterException(404, `Not found entity for this query.`);
+        }
+
         if (response.err_code) {
             const msg = `Got error at ${ctx.apiMethod}. Response body: ${JSON.stringify(body.response)}`;
+
+            this.options?.logLevel && this.log.error('Response has error code', { ctx, response, msg });
+
             throw new PosterException(response.err_code, msg);
         }
     
-        if (response.err_code === 0) return null as any;
-    
+        if (response.err_code === 0) {
+            this.options?.logLevel && this.log.error('Response has err code 0', { ctx, response });
+
+            return null as any;
+        }
+        
         return body.response as R;
     }
 }
