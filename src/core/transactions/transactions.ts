@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { Transactions as t } from './types-transaction';
 import { BaseApiRoute, QContext, ApiMethod, Context, CBody } from '../base';
 
