@@ -84,8 +84,30 @@ export namespace Transactions {
     count?: number;
   }
 
+  export interface AddProductToTransactionBody extends TransactionBase {
+    product_id: string;
+    modificator_id?: string;
+    modification?: string;
+  }
+
+  export interface ChangeProductTransactionCountBody extends TransactionBase {
+    product_id: string;
+    modificator_id?: string;
+    modification?: string;
+    count: number;
+  }
+
+  export interface ModificationJson {
+    m: number;
+    a: number;
+  }
+
   export interface ProductModification {
     modification_id: string;
     count: number;
+  }
+  
+  export interface ChangeCommentToCheckBody extends TransactionBase {
+    comment: string;
   }
 }
