@@ -110,4 +110,16 @@ export namespace Transactions {
   export interface ChangeCommentToCheckBody extends TransactionBase {
     comment: string;
   }
+  export interface RemoveTransactionBody {
+    spot_tablet_id: string;
+    transaction_id: string;
+    user_id: string;
+  }
+  export interface CloseTransactionBody extends TransactionBase {
+    payed_cash?: string;
+    payed_card?: string;
+    payed_cert?: string;
+    reason?: "1" | "2" | "3";
+  }
+  
 }

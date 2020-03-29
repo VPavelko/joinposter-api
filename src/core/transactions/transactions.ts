@@ -66,4 +66,20 @@ export class Transactions extends BaseApiRoute {
   ) {
     return this.queryRunner(ctx);
   }
+
+  @ApiMethod()
+  public removeTransaction(
+    @CBody() body: t.RemoveTransactionBody,
+    @Context() ctx: QContext = {},
+  ) {
+    return this.queryRunner<t.RemoveTransactionBody>(ctx);
+  }
+
+  @ApiMethod()
+  public closeTransaction(
+    @CBody() body: t.CloseTransactionBody,
+    @Context() ctx: QContext = {},
+  ) {
+    return this.queryRunner(ctx);
+  }
 }
