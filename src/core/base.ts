@@ -1,6 +1,7 @@
 import { RequestPromiseOptions } from "request-promise";
 import request from "request-promise";
 import { UriOptions } from "request";
+import { Log } from '@uk/log';
 
 import { PosterException } from './errors';
 
@@ -13,14 +14,32 @@ export interface QContext<TBody extends Object = never, TQuery extends Object = 
 
 export type Query = RequestPromiseOptions & UriOptions;
 
+enum LogLevel {
+    INFO = 1,
+    DEBUG = 2,
+}
+
+export interface PosterOptions {
+    logLevel?: LogLevel;
+} 
+
 export abstract class BaseApiRoute {
     protected static readonly urlPrefix = "https://joinposter.com/api";
     static route: string;
+    log: Log;
 
-    constructor(protected readonly token: string) {
+    constructor(
+        protected readonly token: string,
+        protected options?: PosterOptions,
+    ) {
+        this.log = new Log(this.constructor.name.toUpperCase());
     }
 
     protected async queryRunner<T extends object, R = void>(ctx: QContext<T>): Promise<R> {
+        if (this.options?.logLevel === LogLevel.DEBUG) {
+            this.log.debug('Query runner got ctx', { ctx });
+        }
+        
         const query: Query = {
             uri: `${BaseApiRoute.urlPrefix}/${ctx.apiMethod}`,
             method: ctx.method,
@@ -65,6 +84,15 @@ export function ApiMethod() {
         const meta = Reflect.getMetadata(propertyKey, target);
 
         descriptor.value = function(...args: any[]) {
+            const thiz = this as BaseApiRoute;
+            const options = thiz['options'] as PosterOptions;
+
+            const debug = options?.logLevel === LogLevel.DEBUG;
+            const info = options?.logLevel === LogLevel.INFO;
+            
+            info && thiz.log.info(`Called ${propertyKey} method`);
+            debug && thiz.log.debug(`Called ${propertyKey} method`, { args });
+
             const ctx: QContext = {
                 apiMethod: `${route}.${propertyKey}`,
                 method: propertyKey.includes('get') ? 'GET' : 'POST',
@@ -79,7 +107,19 @@ export function ApiMethod() {
                 args[ctxIndex || 0] = ctx;
             }
 
-            return defaultMethod.call(this, ...args);
+            debug && thiz.log.debug('Generated context', { ctx });
+
+            return defaultMethod.call(this, ...args)
+                .then((result: any) => {
+                    debug && thiz.log.debug(`Method ${propertyKey} got result`, { result });
+
+                    return result;
+                })
+                .catch((err: Error) => {
+                    debug && thiz.log.debug(`Method ${propertyKey} got error`, { err });
+
+                    throw err;
+                });
         }
     }
 }
