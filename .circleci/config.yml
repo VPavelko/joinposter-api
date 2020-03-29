@@ -33,8 +33,10 @@ jobs:
       
       - run: git config --global user.email "$USER_MAIL"
       - run: git config --global user.name "$USER_NAME"        
-
+      
+      - run: git add . && git commit 
       - run: npm version patch
+      - run: git add . && git commit
 
       - run:
           name: Authenticate at npm.org
