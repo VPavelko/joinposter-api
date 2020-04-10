@@ -134,6 +134,7 @@ export function ApiMethod() {
 
                         logInfo.args = cleanArgs;
                         logInfo.ctx = context;
+                        posterQuery.qs.token = 'POSTER_API_TOKEN (HIDDEN)';
                         logInfo.posterQuery = posterQuery;
 
                         thiz.log.debug(msg, logInfo);
