@@ -16,7 +16,7 @@ export type Query = RequestPromiseOptions & UriOptions;
 
 enum LogLevel {
     INFO = 1,
-    DEBUG = 2,
+    DEBUG,
 }
 
 export interface PosterOptions {
@@ -35,11 +35,7 @@ export abstract class BaseApiRoute {
         this.log = new Log((`POSTER/${this.constructor.name.toUpperCase()}`));
     }
 
-    protected async queryRunner<T extends object, R = void>(ctx: QContext<T>): Promise<R> {
-        if (this.options?.logLevel === LogLevel.DEBUG) {
-            this.log.debug('Query runner got ctx', { ctx, logLevel: this.options?.logLevel });
-        }
-        
+    protected async queryRunner<T extends object, R = void>(ctx: QContext<T>): Promise<R> {    
         const query: Query = {
             uri: `${BaseApiRoute.urlPrefix}/${ctx.apiMethod}`,
             method: ctx.method,
@@ -50,7 +46,9 @@ export abstract class BaseApiRoute {
             simple: true,
             json: true,
         };
-    
+
+        (<any>ctx)['posterQuery'] = query;
+        
         if (ctx.method === "POST" && ctx.body) {
             query["formData"] = ctx.body;
         }
@@ -59,28 +57,23 @@ export abstract class BaseApiRoute {
         
         if (body.error) {
             const { error: code, message } = body;
+
             throw new PosterException(code, message);
         }
     
         const response = body.response;
     
         if (response === false) {
-            this.options?.logLevel && this.log.error('Response false', { ctx, response });
-
             throw new PosterException(404, `Not found entity for this query.`);
         }
 
         if (response.err_code) {
             const msg = `Got error at ${ctx.apiMethod}. Response body: ${JSON.stringify(body.response)}`;
 
-            this.options?.logLevel && this.log.error('Response has error code', { ctx, response, msg });
-
             throw new PosterException(response.err_code, msg);
         }
     
         if (response.err_code === 0) {
-            this.options?.logLevel && this.log.error('Response has err code 0', { ctx, response });
-
             return null as any;
         }
         
@@ -101,8 +94,8 @@ export function ApiMethod() {
             const debug = options?.logLevel === LogLevel.DEBUG;
             const info = options?.logLevel === LogLevel.INFO;
             
-            info && thiz.log.info(`Called ${propertyKey} method`);
-            debug && thiz.log.debug(`Called ${propertyKey} method`, { args });
+            const msg = `Call '${propertyKey}' method`;
+            const logInfo: any = {};
 
             const ctx: QContext = {
                 apiMethod: `${route}.${propertyKey}`,
@@ -111,6 +104,7 @@ export function ApiMethod() {
 
             if (meta) {
                 const { bodyIndex, ctxIndex } = meta;
+                
                 if (bodyIndex !== undefined) {
                     ctx.body = args[bodyIndex];
                 }
@@ -118,18 +112,32 @@ export function ApiMethod() {
                 args[ctxIndex || 0] = ctx;
             }
 
-            debug && thiz.log.debug('Generated context', { ctx });
-
             return defaultMethod.call(this, ...args)
-                .then((result: any) => {
-                    debug && thiz.log.debug(`Method ${propertyKey} got result`, { result });
+                .then((rv: any) => {
+                    logInfo.rv = rv;
 
-                    return result;
+                    return rv;
                 })
                 .catch((err: Error) => {
-                    debug && thiz.log.debug(`Method ${propertyKey} got error`, { err });
+                    logInfo.err = err;
 
                     throw err;
+                })
+                .finally(() => {
+                    if (info) {
+                        thiz.log.info(msg);
+                    }
+
+                    if (debug) {
+                        const { posterQuery, ...context } = ctx as any;
+                        const cleanArgs = args.slice(0, args.length - 1);
+
+                        logInfo.args = cleanArgs;
+                        logInfo.ctx = context;
+                        logInfo.posterQuery = posterQuery;
+
+                        thiz.log.debug(msg, logInfo);
+                    }
                 });
         }
     }

@@ -1,6 +1,6 @@
 {
   "name": "joinposter-api",
-  "version": "0.0.23",
+  "version": "0.0.24",
   "description": "Simple client for joinposter web-api.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,7 @@
   },
   "scripts": {
     "build": "tsc -v && tsc",
-    "test": "tsc && node dist/test",
+    "test": "tsc && node dist/test | uk-log",
     "prepublish": "npm run build"
   },
   "author": {

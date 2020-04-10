@@ -1,6 +1,9 @@
 import { Poster } from "./core";
 
-const poster = new Poster(process.env.TOKEN || "token");
+const poster = new Poster(
+    process.env.TOKEN || '',
+    { logLevel: 2 },
+);
 
 (async () => {
     await poster.menu.getProducts();
