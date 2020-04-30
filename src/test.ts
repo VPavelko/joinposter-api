@@ -6,8 +6,9 @@ const poster = new Poster(
 );
 
 (async () => {
-    await poster.menu.getProducts();
-    await poster.menu.getProducts(2);
-    await poster.menu.getProducts(3, "products");
-    await poster.access.getSpots();
+    await poster.menu.getProducts(21);
+    // await poster.menu.getProducts(2);
+    // await poster.menu.getProducts(3, "products");
+    // await poster.access.getSpots();
+    await poster.menu.getProduct(233)
 })();

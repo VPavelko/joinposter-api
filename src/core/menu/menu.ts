@@ -1,6 +1,6 @@
-import 'reflect-metadata';
-import { BaseApiRoute, QContext, ApiMethod, Context, CBody, Query } from '../base';
-import * as t from './types-menu';
+import "reflect-metadata";
+import { BaseApiRoute, QContext, ApiMethod, Context, CBody, Query } from "../base";
+import * as t from "./types-menu";
 
 export class Menu extends BaseApiRoute {
     @ApiMethod()
@@ -20,7 +20,10 @@ export class Menu extends BaseApiRoute {
     }
 
     @ApiMethod()
-    updateCategory(@CBody() body: t.UpdateCategoryBody, @Context() ctx: QContext<t.UpdateCategoryBody> = {}): Promise<string> {
+    updateCategory(
+        @CBody() body: t.UpdateCategoryBody,
+        @Context() ctx: QContext<t.UpdateCategoryBody> = {},
+    ): Promise<string> {
         return this.queryRunner<t.UpdateCategoryBody, string>(ctx);
     }
 
@@ -31,44 +34,51 @@ export class Menu extends BaseApiRoute {
 
     @ApiMethod()
     getProducts(
-            category_id?: number, 
-            type?: t.GetProductType,
-            @Context() ctx: QContext<never, t.GetProductsQuery> = {}
-        ): Promise<t.Product[]> {
-            const query: t.GetProductsQuery = {};
+        category_id?: number,
+        type?: t.GetProductType,
+        @Context() ctx: QContext<never, t.GetProductsQuery> = {},
+    ): Promise<t.Product[]> {
+        const query: t.GetProductsQuery = {};
 
-            category_id && (query.category_id = category_id);
-            type && (query.type = type);
-            
-            if (category_id !== undefined || type) {
-                ctx.query = query;
-            } 
-            return this.queryRunner<t.GetProductsQuery, t.Product[]>(ctx);
+        category_id && (query.category_id = category_id);
+        type && (query.type = type);
+
+        if (category_id !== undefined || type) {
+            ctx.query = query;
+        }
+        return this.queryRunner<t.GetProductsQuery, t.Product[]>(ctx);
     }
 
     @ApiMethod()
     getProduct(product_id: number, @Context() ctx: QContext<never, t.GetProductQuery> = {}): Promise<t.Product> {
-        return this.queryRunner<t.GetProductQuery, t.Product>(ctx); 
+        const query: t.GetProductQuery = {
+            product_id,
+        };
+        ctx.query = query;
+        return this.queryRunner<t.GetProductQuery, t.Product>(ctx);
     }
 
-    private multipartArrays = ['barcode', 'product_code', 'modificator_name', 'cost', 'price', 'visible' ];
+    private multipartArrays = ["barcode", "product_code", "modificator_name", "cost", "price", "visible"];
 
     @ApiMethod()
-    createProduct(body: t.CreateProductBody, @Context() ctx: QContext<t.CreateProductBody> = {}): Promise<string | t.CreateProductResponse> {
+    createProduct(
+        body: t.CreateProductBody,
+        @Context() ctx: QContext<t.CreateProductBody> = {},
+    ): Promise<string | t.CreateProductResponse> {
         if (body.modifications) {
             for (const key of this.multipartArrays) {
                 const data = (body as any)[key];
                 if (data) {
                     if (!Array.isArray(data)) {
-                        throw new Error(`If modifications == ${body.modifications} then ${key} should be an array!`);       
-                    }   
-                    
-                    data.forEach((value, index) => { 
+                        throw new Error(`If modifications == ${body.modifications} then ${key} should be an array!`);
+                    }
+
+                    data.forEach((value, index) => {
                         (data as any)[`${key}[${index}]`] = value;
                     });
                     (body as any)[key] = undefined;
                 }
-            } 
+            }
         }
 
         return this.queryRunner<t.CreateProductBody, t.CreateProductResponse>(ctx);
