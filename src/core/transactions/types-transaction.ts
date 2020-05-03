@@ -1,4 +1,4 @@
-import { Omit } from '../../helpers';  
+import { Omit } from '../../helpers';
 
 export namespace Transactions {
   interface TransactionBase {
@@ -106,7 +106,7 @@ export namespace Transactions {
     modification_id: string;
     count: number;
   }
-  
+
   export interface ChangeCommentToCheckBody extends TransactionBase {
     comment: string;
   }
@@ -115,11 +115,17 @@ export namespace Transactions {
     transaction_id: string;
     user_id: string;
   }
+  export interface RemoveTransactionProductBody {
+      spot_id: string;
+      spot_tablet_id: string;
+      transaction_id: string;
+      product_id: string;
+  }
   export interface CloseTransactionBody extends TransactionBase {
     payed_cash?: string;
     payed_card?: string;
     payed_cert?: string;
     reason?: "1" | "2" | "3";
   }
-  
+
 }
