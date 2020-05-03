@@ -21,7 +21,7 @@ export class Transactions extends BaseApiRoute {
   @ApiMethod()
   async addTransactionProduct(
     product: t.AddProductToTransaction,
-    @Context() 
+    @Context()
     ctx: QContext<t.AddProductToTransactionBody> = {},
   ): Promise<t.AddProductTransactionResponse> {
     const { count, modification, modificator_id, ...baseBody } = product;
@@ -44,14 +44,14 @@ export class Transactions extends BaseApiRoute {
     if (!count || count === 1) {
       return result;
     }
-     
+
     return this.changeTransactionProductCount({ ...body, count });
   }
 
   @ApiMethod()
-  private changeTransactionProductCount(
+  changeTransactionProductCount(
     @CBody() body: t.ChangeProductTransactionCountBody,
-    @Context() ctx: QContext = {},  
+    @Context() ctx: QContext = {},
   ): Promise<t.AddProductTransactionResponse> {
     return this
       .queryRunner<
