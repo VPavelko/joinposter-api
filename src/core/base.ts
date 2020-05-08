@@ -1,9 +1,9 @@
 import { RequestPromiseOptions } from "request-promise";
 import request from "request-promise";
 import { UriOptions } from "request";
-import { Log } from '@uk/log';
+import { Log } from "@uk/log";
 
-import { PosterException } from './errors';
+import { PosterException } from "./errors";
 
 export interface QContext<TBody extends Object = never, TQuery extends Object = TBody> {
     method?: "GET" | "POST";
@@ -21,21 +21,18 @@ enum LogLevel {
 
 export interface PosterOptions {
     logLevel?: LogLevel;
-} 
+}
 
 export abstract class BaseApiRoute {
     protected static readonly urlPrefix = "https://joinposter.com/api";
     static route: string;
     log: Log;
 
-    constructor(
-        protected readonly token: string,
-        protected options?: PosterOptions,
-    ) {
-        this.log = new Log((`POSTER/${this.constructor.name.toUpperCase()}`));
+    constructor(protected readonly token: string, protected options?: PosterOptions) {
+        this.log = new Log(`POSTER/${this.constructor.name.toUpperCase()}`);
     }
 
-    protected async queryRunner<T extends object, R = void>(ctx: QContext<T>): Promise<R> {    
+    protected async queryRunner<T extends object, R = void>(ctx: QContext<T>): Promise<R> {
         const query: Query = {
             uri: `${BaseApiRoute.urlPrefix}/${ctx.apiMethod}`,
             method: ctx.method,
@@ -47,22 +44,27 @@ export abstract class BaseApiRoute {
             json: true,
         };
 
-        (<any>ctx)['posterQuery'] = query;
-        
+        (<any>ctx)["posterQuery"] = query;
+
         if (ctx.method === "POST" && ctx.body) {
-            query["formData"] = ctx.body;
+            const data = {} as any;
+            for (const n in ctx.body) {
+                const val = ctx.body[n];
+                if (val !== null && val !== undefined) data[n] = val;
+            }
+            query["formData"] = data;
         }
-        
+
         const body = await request(query);
-        
+
         if (body.error) {
             const { error: code, message } = body;
 
             throw new PosterException(code, message);
         }
-    
+
         const response = body.response;
-    
+
         if (response === false) {
             throw new PosterException(404, `Not found entity for this query.`);
         }
@@ -72,39 +74,39 @@ export abstract class BaseApiRoute {
 
             throw new PosterException(response.err_code, msg);
         }
-    
+
         if (response.err_code === 0) {
             return null as any;
         }
-        
+
         return body.response as R;
     }
 }
 
 export function ApiMethod() {
-    return function(target: any, propertyKey: string, descriptor: PropertyDescriptor) {        
+    return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const defaultMethod = target[propertyKey];
-        const route = target.constructor.name.toLowerCase();    
+        const route = target.constructor.name.toLowerCase();
         const meta = Reflect.getMetadata(propertyKey, target);
 
-        descriptor.value = function(...args: any[]) {
+        descriptor.value = function (...args: any[]) {
             const thiz = this as BaseApiRoute;
-            const options = thiz['options'] as PosterOptions;
+            const options = thiz["options"] as PosterOptions;
 
             const debug = options?.logLevel === LogLevel.DEBUG;
             const info = options?.logLevel === LogLevel.INFO;
-            
+
             const msg = `Call '${propertyKey}' method`;
             const logInfo: any = {};
 
             const ctx: QContext = {
                 apiMethod: `${route}.${propertyKey}`,
-                method: propertyKey.includes('get') ? 'GET' : 'POST',
-            }
+                method: propertyKey.includes("get") ? "GET" : "POST",
+            };
 
             if (meta) {
                 const { bodyIndex, ctxIndex } = meta;
-                
+
                 if (bodyIndex !== undefined) {
                     ctx.body = args[bodyIndex];
                 }
@@ -112,7 +114,8 @@ export function ApiMethod() {
                 args[ctxIndex || 0] = ctx;
             }
 
-            return defaultMethod.call(this, ...args)
+            return defaultMethod
+                .call(this, ...args)
                 .then((rv: any) => {
                     logInfo.rv = rv;
 
@@ -134,34 +137,34 @@ export function ApiMethod() {
 
                         logInfo.args = cleanArgs;
                         logInfo.ctx = context;
-                        posterQuery.qs.token = 'POSTER_API_TOKEN (HIDDEN)';
+                        posterQuery.qs.token = "POSTER_API_TOKEN (HIDDEN)";
                         logInfo.posterQuery = posterQuery;
 
                         thiz.log.debug(msg, logInfo);
                     }
                 });
-        }
-    }
+        };
+    };
 }
 
 export function Context() {
-    return function(target: any, propertyKey: string | symbol, ctxIndex: number) {
+    return function (target: any, propertyKey: string | symbol, ctxIndex: number) {
         let metadata = Reflect.getMetadata(propertyKey, target);
         if (!metadata) {
             Reflect.defineMetadata(propertyKey, { ctxIndex }, target);
         } else {
             metadata.ctxIndex = ctxIndex;
         }
-    }
+    };
 }
 
 export function CBody() {
-    return function(target: any, propertyKey: string | symbol, bodyIndex: number) {   
+    return function (target: any, propertyKey: string | symbol, bodyIndex: number) {
         let metadata = Reflect.getMetadata(propertyKey, target);
         if (!metadata) {
             Reflect.defineMetadata(propertyKey, { bodyIndex }, target);
         } else {
             metadata.bodyIndex = bodyIndex;
         }
-    }
+    };
 }
