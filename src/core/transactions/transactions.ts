@@ -83,4 +83,13 @@ export class Transactions extends BaseApiRoute {
   ) {
     return this.queryRunner(ctx);
   }
+
+
+  @ApiMethod()
+  public changeClient(
+    @CBody() body: t.ChangeClientBody,
+    @Context() ctx: QContext = {},
+  ) {
+    return this.queryRunner(ctx);
+  }
 }

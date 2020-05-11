@@ -121,5 +121,12 @@ export namespace Transactions {
     payed_cert?: string;
     reason?: "1" | "2" | "3";
   }
-  
+
+  export interface ChangeClientBody {
+    spot_id: string;
+    spot_tablet_id: string;
+    transaction_id: string;
+    client_id: string;
+    time?: number;
+  }  
 }
