@@ -9,6 +9,6 @@ const poster = new Poster(
     await poster.menu.getProducts(21);
     // await poster.menu.getProducts(2);
     // await poster.menu.getProducts(3, "products");
-    // await poster.access.getSpots();
+    await poster.access.getSpots();
     await poster.menu.getProduct(233)
 })();
