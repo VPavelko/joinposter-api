@@ -75,4 +75,9 @@ export class Transactions extends BaseApiRoute {
     public removeTransactionProduct(@CBody() body: t.RemoveTransactionProductBody, @Context() ctx: QContext = {}) {
         return this.queryRunner<t.RemoveTransactionProductBody>(ctx);
     }
+
+    @ApiMethod()
+    public changeClient(@CBody() body: t.ChangeClientBody, @Context() ctx: QContext = {}) {
+        return this.queryRunner(ctx);
+    }
 }
