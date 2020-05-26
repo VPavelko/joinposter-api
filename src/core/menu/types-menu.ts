@@ -1,9 +1,21 @@
-type PosterColor = 'white' | 'red' | 'orange' | 'yellow' | 'green' | 'blue' | 'navy-blue' | 'purple'  | 'black' | 'mint-blue' | 'lime-green' | 'pink';
-type ProductCategoryHiddenFlag = '0' | '1';
+type PosterColor =
+    | "white"
+    | "red"
+    | "orange"
+    | "yellow"
+    | "green"
+    | "blue"
+    | "navy-blue"
+    | "purple"
+    | "black"
+    | "mint-blue"
+    | "lime-green"
+    | "pink";
+type ProductCategoryHiddenFlag = "0" | "1";
 
 export interface GetCategoryQuery {
     category_id: number;
-    '1c'?: boolean;
+    "1c"?: boolean;
 }
 
 export interface Category {
@@ -29,7 +41,7 @@ export interface Category {
 export interface CreateCategoryBody {
     category_name: string;
     parent_category: number;
-    category_color?:  PosterColor;
+    category_color?: PosterColor;
     category_hidden?: ProductCategoryHiddenFlag;
     tax_id?: number;
 }
@@ -47,22 +59,40 @@ export interface RemoveCategoryBody {
     category_id: number;
 }
 
-
 export interface Product {
+    barcode: string;
     category_name: string;
-    product_name: string;
-    product_id: string;
+    unit: string;
+    cost: string;
+    fiscal: string;
+    hidden: string;
     menu_category_id: string;
-    spots: { [key: string]: string }[];
-    price: { [key: string]: string }[];
-    photo: string;
-    photo_origin: string;
+    workshop: string;
+    nodiscount: string;
+    photo?: string;
+    photo_origin?: string;
+    price: { [key: string]: string };
+    product_code: string;
+    product_id: string;
+    product_name: string;
+    profit: { [key: string]: string };
+    sort_order: string;
+    tax_id: string;
+    product_tax_id: string;
+    type: string;
+    weight_flag: string;
+    color: string;
+    spots: Spot[];
+    ingredient_id?: string;
+    cooking_time?: string;
+    different_spots_prices?: string;
+    out?: number;
     group_modifications?: ModificationGroup[];
-    modifications: Modificator[];
+    modifications?: Modificator[];
 }
 
 export interface ModificationGroup {
-    dish_modification_group_id: string;
+    dish_modification_group_id: number;
     name: string;
     num_min: number;
     num_max: number;
@@ -74,6 +104,19 @@ export interface Modificator {
     modificator_id: string;
     modificator_name: string;
     modificator_selfprice: number;
+    order: string;
+    modificator_barcode: string;
+    modificator_product_code: string;
+    spots: Spot[];
+    ingredient_id: string;
+    fiscal_code: string;
+}
+
+export interface Spot {
+    spot_id: string;
+    price: string;
+    profit: string;
+    visible: string;
 }
 
 export interface Modification {
@@ -89,7 +132,7 @@ export interface Modification {
     last_modified_time: string;
 }
 
-export type GetProductType = 'products' | 'batchtickets';
+export type GetProductType = "products" | "batchtickets";
 
 export interface GetProductsQuery {
     category_id?: number;
