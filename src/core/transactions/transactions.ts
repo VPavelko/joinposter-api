@@ -34,7 +34,11 @@ export class Transactions extends BaseApiRoute {
         }
 
         if (modification) {
-            body.modification = JSON.stringify(this.modificationTransform(modification));
+            if(typeof modification === 'string'){
+                body.modification = modification;
+            }else {
+                body.modification = JSON.stringify(this.modificationTransform(modification));
+            }
         }
 
         ctx.body = body;

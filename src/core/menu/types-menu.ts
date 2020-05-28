@@ -120,7 +120,7 @@ export interface Spot {
 }
 
 export interface Modification {
-    dish_modification_id: string;
+    dish_modification_id: number;
     name: string;
     ingredient_id: number;
     type: number;

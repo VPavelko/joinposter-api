@@ -80,7 +80,7 @@ export namespace Transactions {
   export interface AddProductToTransaction extends TransactionBase {
     product_id: string;
     modificator_id?: string;
-    modification?: ProductModification[];
+    modification?: ProductModification[] | string;
     count?: number;
   }
 
@@ -120,6 +120,8 @@ export namespace Transactions {
       spot_tablet_id: string;
       transaction_id: string;
       product_id: string;
+      modificator_id?: string;
+      modification?: string;
   }
   export interface CloseTransactionBody extends TransactionBase {
     payed_cash?: string;
@@ -134,5 +136,5 @@ export namespace Transactions {
     transaction_id: string;
     client_id: string;
     time?: number;
-  }  
+  }
 }
