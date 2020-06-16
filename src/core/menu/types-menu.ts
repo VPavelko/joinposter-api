@@ -75,6 +75,7 @@ export interface Product {
     product_code: string;
     product_id: string;
     product_name: string;
+    product_production_description?: string;
     profit: { [key: string]: string };
     sort_order: string;
     tax_id: string;
