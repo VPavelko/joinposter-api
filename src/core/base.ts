@@ -86,7 +86,8 @@ export abstract class BaseApiRoute {
 export function ApiMethod() {
     return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
         const defaultMethod = target[propertyKey];
-        const route = target.constructor.name.toLowerCase();
+        let route = target.constructor.name.toLowerCase();
+        if (route === "incomingorders") route = "incomingOrders";
         const meta = Reflect.getMetadata(propertyKey, target);
 
         descriptor.value = function (...args: any[]) {
