@@ -52,7 +52,7 @@ export abstract class BaseApiRoute {
                 const val = ctx.body[n];
                 if (val !== null && val !== undefined) data[n] = val;
             }
-            query["formData"] = data;
+            query["body"] = data;
         }
 
         const body = await request(query);
