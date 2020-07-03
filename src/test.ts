@@ -1,4 +1,4 @@
-import { Poster } from "./core";
+import { Poster } from ".";
 
 const poster = new Poster(
     process.env.TOKEN || '',
