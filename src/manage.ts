@@ -6,7 +6,7 @@ export namespace Manage {
     export async function auth(props: AuthProps) {
         const { id, secret, code } = props;
         const verify = md5(`${id}:${secret}:${code}`);
-        console.log({ id, secret, code, verify });
+        // console.log({ id, secret, code, verify });
         try {
             const response = await rp.post(authUrl, {
                 formData: {
