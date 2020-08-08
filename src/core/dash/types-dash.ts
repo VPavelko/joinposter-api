@@ -124,3 +124,37 @@ export interface TransactionProduct {
     tax_fiscal: string;
     category_id: string;
 }
+
+export interface GetAnalyticsQuery {
+    dateFrom?: Date;
+    dateTo?: Date;
+    interpolate?: "day" | "week" | "month";
+    select?: "revenue" | "profit" | "average_receipt" | "transactions" | "visitors" | "average_time";
+    type?: "waiters" | "workshops" | "category" | "products" | "spots" | "clients";
+    id?: string;
+    business_day: boolean;
+}
+export interface Analytics {
+    counters?: {
+        revenue: string;
+        profit: string;
+        transactions: string;
+        visitors: string;
+        average_receipt: number;
+        average_time: string;
+    };
+}
+
+export interface GetSpotsSalesQuery {
+    dateFrom?: Date;
+    dateTo?: Date;
+    spot_id?: number | string;
+}
+
+export interface SpotsSales {
+    revenue: number;
+    profit: number;
+    profit_netto: number;
+    clients: number;
+    middle_invoice: number;
+}
