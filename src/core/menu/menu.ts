@@ -40,7 +40,9 @@ export class Menu extends BaseApiRoute {
     ): Promise<t.Product[]> {
         const query: t.GetProductsQuery = {};
 
-        category_id && (query.category_id = category_id);
+        if (category_id !== undefined) {
+            query.category_id = category_id;
+        }
         type && (query.type = type);
 
         if (category_id !== undefined || type) {
