@@ -4,7 +4,7 @@ import { IncomingOrder as t } from "./types-incomingOrders";
 
 export class IncomingOrders extends BaseApiRoute {
     @ApiMethod()
-    createIncomingOrder(@CBody() body: t.CreateBody, @Context() ctx: QContext = {}) {
+    createIncomingOrder(@CBody() body: t.CreateBody, @Context() ctx: QContext = {}): Promise<t.IncomingOrder> {
         return this.queryRunner<t.CreateBody, any>(ctx);
     }
 
