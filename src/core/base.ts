@@ -32,6 +32,12 @@ export abstract class BaseApiRoute {
         this.log = new Log(`POSTER/${this.constructor.name.toUpperCase()}`);
     }
 
+    protected formateDate(date?: Date) {
+        if (!date) return undefined;
+        const rv = date.toLocaleDateString().split(".").reverse().join("");
+        return rv as any;
+    }
+
     protected async queryRunner<T extends object, R = void>(ctx: QContext<T>): Promise<R> {
         const query: Query = {
             uri: `${BaseApiRoute.urlPrefix}/${ctx.apiMethod}`,

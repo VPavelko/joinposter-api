@@ -3,6 +3,7 @@ import { Menu, MenuTypes } from "./menu";
 import { Access, AccessTypes } from "./access";
 import { Settings, SettingsTypes } from "./settings";
 import { Dash, DashTypes } from "./dash";
+import { Finance, FinanceTypes } from "./finance";
 import { IncomingOrders, IncomingOrdersTypes } from "./incomingOrders";
 import { PosterOptions } from "./base";
 import { Clients, ClientsTypes } from "./clients";
@@ -15,6 +16,7 @@ export class Poster {
     transactions: Transactions;
     incomingOrders: IncomingOrders;
     clients: Clients;
+    finance: Finance;
 
     constructor(protected readonly token: string, options?: PosterOptions) {
         this.menu = new Menu(token, options);
@@ -24,6 +26,7 @@ export class Poster {
         this.transactions = new Transactions(token, options);
         this.clients = new Clients(token, options);
         this.incomingOrders = new IncomingOrders(token, options);
+        this.finance = new Finance(token, options);
     }
 }
 
@@ -35,4 +38,5 @@ export {
     TransactionsTypes as Transaction,
     ClientsTypes as Clients,
     IncomingOrdersTypes as IncomingOrders,
+    FinanceTypes as Finance,
 };
