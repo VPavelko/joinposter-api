@@ -158,3 +158,32 @@ export interface SpotsSales {
     clients: number;
     middle_invoice: number;
 }
+
+export interface GetProductsSalesQuery {
+    date_from?: Date;
+    date_to?: Date;
+    spot_id?: number | string;
+}
+
+export interface ProductSales {
+    product_name: string;
+    modificator_name: string;
+    product_id: string;
+    modification_id: string;
+    delete: 0 | 1;
+    left: string;
+    right: string;
+    category_id: string;
+    count: string;
+    weight_flag: 0 | 1;
+    payed_sum: string;
+    product_sum: string;
+    bonus_sum: string;
+    cert_sum: string;
+    product_profit: string;
+    product_profit_netto: string;
+    tax_sum: string;
+    vat_sum: string;
+    unit: string;
+    discount: number;
+}

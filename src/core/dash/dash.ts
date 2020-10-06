@@ -39,9 +39,16 @@ export class Dash extends BaseApiRoute {
         return this.queryRunner<{}, t.SpotsSales>(ctx);
     }
 
-    protected formateDate(date?: Date) {
-        if (!date) return undefined;
-        const rv = date.toLocaleDateString().split(".").reverse().join("");
-        return rv as any;
+    @ApiMethod()
+    getProductsSales(
+        query: t.GetProductsSalesQuery,
+        @Context() ctx: QContext<never, t.GetProductsSalesQuery> = {},
+    ): Promise<t.ProductSales> {
+        ctx.query = {
+            ...query,
+            date_from: this.formateDate(query.date_from),
+            date_to: this.formateDate(query.date_to),
+        };
+        return this.queryRunner<{}, t.ProductSales>(ctx);
     }
 }
