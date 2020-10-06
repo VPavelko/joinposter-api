@@ -43,12 +43,12 @@ export class Dash extends BaseApiRoute {
     getProductsSales(
         query: t.GetProductsSalesQuery,
         @Context() ctx: QContext<never, t.GetProductsSalesQuery> = {},
-    ): Promise<t.ProductSales> {
+    ): Promise<t.ProductSales[]> {
         ctx.query = {
             ...query,
             date_from: this.formateDate(query.date_from),
             date_to: this.formateDate(query.date_to),
         };
-        return this.queryRunner<{}, t.ProductSales>(ctx);
+        return this.queryRunner<{}, t.ProductSales[]>(ctx);
     }
 }
