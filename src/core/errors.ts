@@ -1,6 +1,9 @@
 export class PosterException extends Error {
     constructor(public readonly code: number, public readonly message: string, originArg?: string) {
-        super(originArg);
+        super(message);
+        this.name = "PosterException";
+        this.code = code;
+        this.message = message;
     }
 }
 

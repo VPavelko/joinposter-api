@@ -62,10 +62,8 @@ export abstract class BaseApiRoute {
         }
 
         const body = await request(query);
-
         if (body.error) {
-            const { error: code, message } = body;
-
+            const { code, message } = body.error;
             throw new PosterException(code, message);
         }
 
@@ -128,9 +126,8 @@ export function ApiMethod() {
 
                     return rv;
                 })
-                .catch((err: Error) => {
+                .catch((err: PosterException) => {
                     logInfo.err = err;
-
                     throw err;
                 })
                 .finally(() => {
@@ -146,8 +143,8 @@ export function ApiMethod() {
                         logInfo.ctx = context;
                         posterQuery.qs.token = "POSTER_API_TOKEN (HIDDEN)";
                         logInfo.posterQuery = posterQuery;
-
-                        thiz.log.debug(msg, logInfo);
+                        if (logInfo.err) thiz.log.error(msg, logInfo);
+                        else thiz.log.debug(msg, logInfo);
                     }
                 });
         };
