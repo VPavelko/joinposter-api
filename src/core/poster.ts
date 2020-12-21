@@ -7,6 +7,7 @@ import { Finance, FinanceTypes } from "./finance";
 import { IncomingOrders, IncomingOrdersTypes } from "./incomingOrders";
 import { PosterOptions } from "./base";
 import { Clients, ClientsTypes } from "./clients";
+import { Application, ApplicationTypes } from "./application";
 
 export class Poster {
     menu: Menu;
@@ -17,6 +18,7 @@ export class Poster {
     incomingOrders: IncomingOrders;
     clients: Clients;
     finance: Finance;
+    application: Application;
 
     constructor(protected readonly token: string, options?: PosterOptions) {
         this.menu = new Menu(token, options);
@@ -27,6 +29,7 @@ export class Poster {
         this.clients = new Clients(token, options);
         this.incomingOrders = new IncomingOrders(token, options);
         this.finance = new Finance(token, options);
+        this.application = new Application(token, options);
     }
 }
 
@@ -39,4 +42,5 @@ export {
     ClientsTypes as Clients,
     IncomingOrdersTypes as IncomingOrders,
     FinanceTypes as Finance,
+    ApplicationTypes as Application,
 };
